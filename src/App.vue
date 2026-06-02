@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { User, Check, RefreshRight, Plus } from '@element-plus/icons-vue'
+// import { User, Check, RefreshRight, Plus } from '@element-plus/icons-vue'
+import LoginModal from './components/LoginModal.vue'
+
+const showLoginModal = ref(false)
 </script>
 
 <template>
   <el-container class="w-full min-h-screen px-6 py-4">
-    <!-- Top Navigation -->
+    <!-- 导航栏 -->
     <el-header height="auto" class="flex justify-center mb-8">
       <nav class="glass-nav flex items-center justify-between px-6 py-4 w-full" style="max-width: 1200px;">
         <div class="logo flex items-center gap-2 cursor-pointer logo-group">
@@ -32,12 +35,14 @@ import { User, Check, RefreshRight, Plus } from '@element-plus/icons-vue'
           <a href="#" class="nav-link active font-sans text-sm font-semibold">虚拟试穿</a>
           <a href="#" class="nav-link font-sans text-sm font-medium">关于我们</a>
         </div>
-        <button class="btn-login font-sans text-sm font-medium">登录 / 注册</button>
+        <button class="btn-login font-sans text-sm font-medium" @click="showLoginModal = true">登录 / 注册</button>
+        <!-- 放置在Teleport下，防止css样式复杂 -->
+          <Teleport to="body"><LoginModal v-model="showLoginModal" /></Teleport>
       </nav>
     </el-header>
 
-    <!-- Main Content -->
-    <el-main class="flex justify-center">
+    <!-- 主内容区 -->
+    <el-main class="flex justify-center" >
       <div class="flex items-center justify-between w-full" style="max-width: 1200px; gap: 4rem;">
         
         
@@ -45,7 +50,7 @@ import { User, Check, RefreshRight, Plus } from '@element-plus/icons-vue'
       </div>
     </el-main>
 
-    <!-- Footer -->
+    <!-- 底部栏 -->
     <el-footer class="flex justify-between items-center mt-auto py-6 relative z-20 w-full" style="position: fixed; bottom: 0; max-width: 1280px; margin-left: auto; margin-right: auto; border-top: 1px solid rgba(21, 128, 61, 0.05); background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);">
       <div class="flex items-center gap-2 px-6 w-full justify-between">
         <div class="flex items-center gap-2">
