@@ -2,7 +2,7 @@
 @import './base.css';
 
 #app {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   margin: 0 auto;
   font-weight: normal;
