@@ -1,9 +1,32 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 // import { User, Check, RefreshRight, Plus } from '@element-plus/icons-vue'
 import LoginModal from './components/LoginModal.vue'
+import { useUserStore } from './stores/userModal.ts';
+import { useUserInfoStore } from './stores/userInfo.ts';
+import { ElMessage } from 'element-plus';
 
-const showLoginModal = ref(false)
+const DEFAULT_AVATAR_URL = 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';
+const userStore = useUserStore();
+const userInfoStore = useUserInfoStore();
+const userInfo = computed(() => userInfoStore.userInfo)
+onMounted(() => {
+  userInfoStore.fetchUserInfo();
+})
+onUnmounted(() => {
+  userInfoStore.clearUserInfo();
+})
+const handleLogOut = () => {
+  localStorage.removeItem('auth_token');
+  localStorage.removeItem('user_id');
+  localStorage.removeItem('user_role');
+  userInfoStore.clearUserInfo();
+  ElMessage({
+    message: '退出登录',
+    type: 'info',
+  })
+  userStore.setUserModalVisible(true);
+}
 </script>
 
 <template>
@@ -30,14 +53,27 @@ const showLoginModal = ref(false)
         </div>
         
         <div class="nav-links flex gap-8">
-          <a href="#" class="nav-link font-sans text-sm font-medium">发现</a>
-          <a href="#" class="nav-link font-sans text-sm font-medium">系列</a>
-          <a href="#" class="nav-link active font-sans text-sm font-semibold">虚拟试穿</a>
+          <a href="#" class="nav-link font-sans text-sm font-medium">衣帽间</a>
+          <a href="#" class="nav-link font-sans text-sm font-medium">试穿历史</a>
+          <a href="#" class="nav-link active font-sans text-sm font-semibold">个人中心</a>
           <a href="#" class="nav-link font-sans text-sm font-medium">关于我们</a>
         </div>
-        <button class="btn-login font-sans text-sm font-medium" @click="showLoginModal = true">登录 / 注册</button>
+        <!-- 设置trigger为click以抵消默认焦点样式触发 -->
+        <el-dropdown trigger="click" v-if="userInfo" style="cursor: pointer;" popper-class="lumina-dropdown-popper">
+          <div class="userInfo">
+            <el-avatar  :src="userInfo.avatar_url || DEFAULT_AVATAR_URL"/>
+            <span>{{ userInfo?.nickname ?? "user"}}</span>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item @click="handleLogOut">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <button v-else  class="btn-login font-sans text-sm font-medium" @click="() => {userStore.setUserModalVisible(true)}">登录 / 注册</button>
         <!-- 放置在Teleport下，防止css样式复杂 -->
-          <Teleport to="body"><LoginModal v-model="showLoginModal" /></Teleport>
+          <Teleport to="body"><LoginModal /></Teleport>
       </nav>
     </el-header>
 
@@ -91,7 +127,7 @@ a {
   color: inherit;
 }
 
-/* Nav Links */
+/* 导航栏样式 */
 .nav-link {
   color: var(--lumina-primary);
   position: relative;
@@ -121,12 +157,23 @@ a {
   transition: transform 0.3s;
 }
 
-/* Logo Hover */
+/* logo hover样式 */
 .logo-group:hover .logo-icon {
   transform: rotate(12deg);
 }
 
-/* Login Button */
+/* 用户信息按钮  */
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.3s ease-in-out;
+}
+.userInfo:hover {
+  transform: scale(1.03);
+}
+
+/* 登录按钮 */
 .btn-login {
   background-color: var(--lumina-surface);
   color: white;
@@ -143,7 +190,7 @@ a {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-/* Glass Panel Hover */
+/* 拟态玻璃样式 */
 .glass-panel:hover {
   transform: scale(1.02);
 }
@@ -158,16 +205,56 @@ a {
   transform: translateY(0) !important;
 }
 
-/* Thumbnails */
+
 .thumb-inactive:hover {
   opacity: 1 !important;
 }
 
-/* Footer Links */
+/* 底部链接样式*/
 .footer-link {
   transition: color 0.3s;
 }
 .footer-link:hover {
   color: var(--lumina-surface);
+}
+</style>
+
+<style>
+/* 重写下拉菜单样式 */
+.lumina-dropdown-popper {
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 4px 24px -1px rgba(21, 128, 61, 0.08) !important;
+  border-radius: 0.7rem !important;
+  padding: 0.5rem !important;
+}
+
+/* 隐藏箭头使界面更干净（Lumina风格偏好） */
+.lumina-dropdown-popper .el-popper__arrow {
+  display: none !important; 
+}
+
+.lumina-dropdown-popper .el-dropdown-menu {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.lumina-dropdown-popper .el-dropdown-menu__item {
+  color: var(--lumina-primary, #15803D) !important;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  border-radius: 0.5rem !important;
+  margin: 0.2rem 0;
+  transition: all 0.3s ease;
+}
+
+.lumina-dropdown-popper .el-dropdown-menu__item:hover,
+.lumina-dropdown-popper .el-dropdown-menu__item:focus {
+  background-color: rgba(21, 128, 61, 0.1) !important;
+  color: var(--lumina-accent, #EC4899) !important;
+  transform: scale(0.95)
 }
 </style>

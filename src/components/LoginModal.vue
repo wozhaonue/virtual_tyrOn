@@ -1,19 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { loginUser, registerUser } from '@/apis/user';
+import { ElMessage } from 'element-plus';
+import { useUserStore } from '@/stores/userModal';
+import { useUserInfoStore } from '@/stores/userInfo';
 
-const props = defineProps<{
-  modelValue: boolean
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
-}>()
-
+const userInfoStore = useUserInfoStore();
+const userStore = useUserStore();
 const activeTab = ref<'login' | 'register'>('login')
-
-const close = () => {
-  emit('update:modelValue', false)
-}
 
 const showRoleSelect = ref(false)
 const selectContainer = ref<HTMLElement | null>(null)
@@ -40,7 +34,7 @@ interface registerFormInter {
   nickname: string;
   password: string;
   role: 'user' | 'admin';
-  adminKey?: string;
+  adminKey: string;
 }
 
 const loginForm = ref<loginFormInter>({
@@ -52,6 +46,7 @@ const registerForm = ref<registerFormInter>({
   nickname: '',
   password: '',
   role: 'user',
+  adminKey: '',
 })
 
 const handleRoleSelect = (role: 'user' | 'admin') => {
@@ -59,10 +54,60 @@ const handleRoleSelect = (role: 'user' | 'admin') => {
   showRoleSelect.value = false
 }
 
-const handleSubmit = () => {
+const handleSubmit = async() => {
   if (activeTab.value === 'login') {
-    console.log('Login:', loginForm.value)
+    const formData = new FormData();
+    formData.append('nickname',loginForm.value.nickname);
+    formData.append('password',loginForm.value.password);
+    try{
+      const data = await loginUser(formData);
+      if(data.code === 200){
+        localStorage.setItem('auth_token', data.token);
+        localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('user_role', data.role);
+        ElMessage({
+          message: '登录成功',
+          type: 'success',
+        })
+        userInfoStore.fetchUserInfo();
+        userStore.setUserModalVisible(false);
+      }else{
+        ElMessage({
+          message: data.msg,
+          type: 'info',
+        })
+      }
+    }catch(err){
+      ElMessage({
+        message: err.message,
+        type: 'error',
+      })
+    }
+    // console.log('Login:', loginForm.value)
   } else {
+    try{
+      const formData = new FormData();
+      formData.append('nickname',registerForm.value.nickname);
+      formData.append('password',registerForm.value.password);
+      formData.append('role',registerForm.value.role);
+      if(registerForm.value.role === 'admin') formData.append('adminKey',registerForm.value.adminKey);
+      const data = await registerUser(formData);
+      console.log(data);
+      if(data.code === 200){
+        console.log('注册成功');
+        ElMessage({
+          message: '注册成功',
+          type: 'success',
+        })
+        activeTab.value = 'login';
+      }
+    }catch(err){
+      console.log(err);
+      ElMessage({
+        message: err.message,
+        type: 'error',
+      })
+    }
     console.log('Register:', registerForm.value)
   }
   // Implement actual login/register logic here
@@ -71,15 +116,15 @@ const handleSubmit = () => {
 
 <template>
     <Transition name="modal">
-      <div v-if="modelValue" class="modal-overlay">
+      <div v-if="userStore.userModal" class="modal-overlay">
         <!-- Overlay Click -->
-        <div class="modal-backdrop" @click="close"></div>
+        <div class="modal-backdrop" @click="() => {userStore.setUserModalVisible(false)}"></div>
         
         <!-- Modal Container -->
         <div class="glass-panel modal-content animate-fade-in-up">
           
           <!-- Close Button -->
-          <button @click="close" class="close-btn">
+          <button @click="() => {userStore.setUserModalVisible(false)}" class="close-btn">
             <svg class="close-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -158,7 +203,6 @@ const handleSubmit = () => {
                     <label class="form-label font-sans">昵称</label>
                     <input 
                       v-model="loginForm.nickname" 
-                      type="email" 
                       placeholder="请输入您的昵称" 
                       class="form-input font-sans"
                       required

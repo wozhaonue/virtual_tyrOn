@@ -6,3 +6,6 @@ export const registerUser = (data) => {
 export const loginUser = (data) => {
   return request.post('/user/login',data);
 }
+export const getUserInfo = () => {
+  return request.get('/user/get-profile');
+}
