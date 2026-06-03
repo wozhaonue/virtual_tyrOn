@@ -1,0 +1,10 @@
+<script setup lang="ts">
+</script>
+<template>
+  <div class="userCenter">
+    个人中心
+  </div>
+</template>
+
+<style scoped>
+</style>

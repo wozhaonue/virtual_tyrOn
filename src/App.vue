@@ -5,7 +5,9 @@ import LoginModal from './components/LoginModal.vue'
 import { useUserStore } from './stores/userModal.ts';
 import { useUserInfoStore } from './stores/userInfo.ts';
 import { ElMessage } from 'element-plus';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const DEFAULT_AVATAR_URL = 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';
 const userStore = useUserStore();
 const userInfoStore = useUserInfoStore();
@@ -53,10 +55,10 @@ const handleLogOut = () => {
         </div>
         
         <div class="nav-links flex gap-8">
-          <a href="#" class="nav-link font-sans text-sm font-medium">衣帽间</a>
-          <a href="#" class="nav-link font-sans text-sm font-medium">试穿历史</a>
-          <a href="#" class="nav-link active font-sans text-sm font-semibold">个人中心</a>
-          <a href="#" class="nav-link font-sans text-sm font-medium">关于我们</a>
+          <router-link active-class="active" to="/" class="nav-link font-sans text-sm font-medium">主页</router-link>
+          <router-link active-class="active" to="/tryOnHistory" class="nav-link font-sans text-sm font-medium">试穿历史</router-link>
+          <router-link active-class="active" to="/userCenter" class="nav-link font-sans text-sm font-medium">个人中心</router-link>
+          <a target="_blank" href="https://github.com/wozhaonue?tab=repositories" class="nav-link font-sans text-sm font-medium">关于我们</a>
         </div>
         <!-- 设置trigger为click以抵消默认焦点样式触发 -->
         <el-dropdown trigger="click" v-if="userInfo" style="cursor: pointer;" popper-class="lumina-dropdown-popper">
@@ -66,7 +68,7 @@ const handleLogOut = () => {
           </div>
           <template #dropdown>
             <el-dropdown-menu>
-            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item @click="() => {router.push('userCenter')}">个人中心</el-dropdown-item>
             <el-dropdown-item @click="handleLogOut">退出登录</el-dropdown-item>
           </el-dropdown-menu>
           </template>
@@ -80,9 +82,7 @@ const handleLogOut = () => {
     <!-- 主内容区 -->
     <el-main class="flex justify-center" >
       <div class="flex items-center justify-between w-full" style="max-width: 1200px; gap: 4rem;">
-        
-        
-        
+        <router-view></router-view>
       </div>
     </el-main>
 
