@@ -3,7 +3,7 @@ import { ElMessage } from "element-plus";
 import { useUserStore } from "./stores/userModal";
 const request = axios.create({
   baseURL: 'http://127.0.0.1:8080/api',
-  timeout: 10000,
+  timeout: 100000,
 })
 // 静态生命一个不用token的api请求方法对应的路径数组
 const whitePathArr = ['/user/login','/user/register'];  
@@ -15,6 +15,8 @@ request.interceptors.request.use(
       console.log('在白名单里');
       return config;
     }else{
+      console.log('该请求不在白名单里');
+      
       if(localStorage.getItem('auth_token') && localStorage.getItem('user_id')){
       const AUTH_TOKEN = localStorage.getItem('auth_token');
       config.headers.Authorization = `Bearer ${AUTH_TOKEN}`;

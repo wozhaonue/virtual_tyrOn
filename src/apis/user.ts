@@ -9,3 +9,10 @@ export const loginUser = (data) => {
 export const getUserInfo = () => {
   return request.get('/user/get-profile');
 }
+
+export const updateUserInfo = (data) => {
+  return request.post('/user/update-profile',data);
+}
+export const uploadUserImage = (data) => {
+  return request.post('/user/upload-image',data);
+}
