@@ -4,7 +4,7 @@ import { useUserInfoStore } from '@/stores/userInfo';
 import { Camera } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import { getUserInfo, updateUserInfo, uploadUserImage } from '@/apis/user';
-import { getAdminData } from '@/apis/admin';
+import { banAdminUser, getAdminData } from '@/apis/admin';
 import { resolveAny } from 'dns';
 import { getAdminUserTableData } from '../apis/admin';
 
@@ -52,6 +52,21 @@ const mountedUserFunc = async () => {
     })
   }
 }
+const userListChange = async() => {
+  try {
+      const res = await getAdminUserTableData();
+      if(res.code === 200){
+        console.log(res.data);
+        userList.value = res.data;
+      }
+    }catch(err){
+      console.log(err);
+      ElMessage({
+        message: err.message || '用户列表获取失败',
+        type: 'info',
+      })
+    }
+}
 const moutedAdminFunc = async () => {
     try{
       const res = await getAdminData();
@@ -74,19 +89,7 @@ const moutedAdminFunc = async () => {
         type: 'error',
       })
     }
-    try {
-      const res = await getAdminUserTableData();
-      if(res.code === 200){
-        console.log(res.data);
-        userList.value = res.data;
-      }
-    }catch(err){
-      console.log(err);
-      ElMessage({
-        message: err.message || '用户列表获取失败',
-        type: 'info',
-      })
-    }
+   userListChange();
 }
 onMounted(() => {mountedUserFunc(),moutedAdminFunc()});
 
@@ -167,7 +170,6 @@ const adminStaticData = reactive<adminStaticInter>({
   total_clothes: 0,
 })
 
-
 interface AdminUserInter {
   user_id: string;
   nickname: string;
@@ -178,6 +180,40 @@ interface AdminUserInter {
 }
 const userList = ref<AdminUserInter[]>([
 ]);
+const handleBanUser = async (row,column) => {
+  
+    console.log(row,column);  
+    if(column.label !== '操作'){
+      return;
+    }
+    try{
+          const BanData = new FormData();
+          console.log(row.user_id,row.status);
+          
+          BanData.append('target_user_id',row.user_id);
+          BanData.append('action',row.status === 1 ? 'ban' : "unban");
+    
+          const res = await banAdminUser(BanData);
+          if(res.code === 200){
+              ElMessage({
+                message: res.msg || '操作成功',
+                type: 'success',
+              })
+              userListChange();
+          }else{
+            ElMessage({
+              message: '操作异常',
+              type: 'info',
+            })
+          }
+      }catch(err){
+        console.log(err);
+        ElMessage({
+          message: '操作异常',
+          type: 'error',
+        })
+      }
+}
 </script>
 
 <template>
@@ -275,7 +311,7 @@ const userList = ref<AdminUserInter[]>([
                   共 {{ userList.length }} 名用户
                 </div>
               </div>
-              <el-table max-height="500px" stripe="true" :data="userList" class="custom-table w-full">
+              <el-table @cell-click="handleBanUser" :current-change="userListChange" max-height="500px" :stripe="true" :data="userList" class="custom-table w-full">
                 <el-table-column prop="user_id" label="ID" width="200" />
                 <el-table-column prop="nickname" label="昵称" width="130" />
                 <el-table-column prop="phone" label="手机号" width="110" >
@@ -297,8 +333,7 @@ const userList = ref<AdminUserInter[]>([
                 </el-table-column>
                 <el-table-column label="操作" width="100" align="center">
                   <template #default="{row}">
-                    <button class="action-btn edit-btn">编辑</button>
-                    <button class="action-btn ban-btn">{{ row.status === 1 ? '封禁' : '解封' }}</button>
+                    <button class="action-btn ban-btn" ">{{ row.status === 1 ? '封禁' : '解封' }}</button>
                   </template>
                 </el-table-column>
                 

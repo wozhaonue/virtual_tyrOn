@@ -7,3 +7,7 @@ export const getAdminData = () => {
 export const getAdminUserTableData = () => {
   return request.get('/admin/users')
 }
+
+export const banAdminUser = (data) => {
+  return request.post('/admin/ban-user',data);
+}
