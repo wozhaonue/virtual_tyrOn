@@ -2,7 +2,7 @@ import axios from "axios";
 import { ElMessage } from "element-plus";
 import { useUserStore } from "./stores/userModal";
 const request = axios.create({
-  baseURL: 'http://127.0.0.1:8080/api',
+  baseURL: '/api',
   timeout: 100000,
 })
 // 静态生命一个不用token的api请求方法对应的路径数组

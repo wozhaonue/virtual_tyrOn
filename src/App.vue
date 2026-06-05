@@ -87,7 +87,7 @@ const handleLogOut = () => {
     </el-main>
 
     <!-- 底部栏 -->
-    <el-footer class="flex justify-between items-center mt-auto py-6 relative z-20 w-full" style="position: fixed; bottom: 0; max-width: 1280px; margin-left: auto; margin-right: auto; border-top: 1px solid rgba(21, 128, 61, 0.05); background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);">
+    <el-footer class="flex justify-between items-center mt-auto py-6 fixed z-20 w-full" style="position: fixed; bottom: 0; max-width: 1280px; margin-left: auto; margin-right: auto; border-top: 1px solid rgba(21, 128, 61, 0.05); background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);">
       <div class="flex items-center gap-2 px-6 w-full justify-between">
         <div class="flex items-center gap-2">
           <span class="font-serif font-bold text-lg" style="color: var(--lumina-surface);">Lumina</span>

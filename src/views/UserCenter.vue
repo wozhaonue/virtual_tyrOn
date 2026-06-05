@@ -19,12 +19,12 @@ interface formDataInter {
   avatar_url: string | null;
 }
 // 个人中心表单数据
-const formData = reactive({
+const formData = reactive<formDataInter>({
   user_id: '',
   nickname: '',
   password: null,
   phone: null,
-  gender: '',
+  gender: null,
   avatar_url: ''
 });
 const mountedUserFunc = async () => {
