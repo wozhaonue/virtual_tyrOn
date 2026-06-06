@@ -51,14 +51,14 @@ const handleLogOut = () => {
               d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"
             />
           </svg>
-          <span class="font-serif font-bold text-2xl tracking-wide">Lumina</span>
+          <span class="font-serif font-bold text-3xl tracking-wide">Lumina</span>
         </div>
         
         <div class="nav-links flex gap-8">
-          <router-link active-class="active" to="/" class="nav-link font-sans text-sm font-medium">主页</router-link>
-          <router-link active-class="active" to="/tryOnHistory" class="nav-link font-sans text-sm font-medium">试穿历史</router-link>
-          <router-link active-class="active" to="/userCenter" class="nav-link font-sans text-sm font-medium">个人中心</router-link>
-          <a target="_blank" href="https://github.com/wozhaonue?tab=repositories" class="nav-link font-sans text-sm font-medium">关于我们</a>
+          <router-link active-class="active" to="/" class="nav-link font-sans text-base font-medium">主页</router-link>
+          <router-link active-class="active" to="/tryOnHistory" class="nav-link font-sans text-base font-medium">试穿历史</router-link>
+          <router-link active-class="active" to="/userCenter" class="nav-link font-sans text-base font-medium">个人中心</router-link>
+          <a target="_blank" href="https://github.com/wozhaonue?tab=repositories" class="nav-link font-sans text-base font-medium">关于我们</a>
         </div>
         <!-- 设置trigger为click以抵消默认焦点样式触发 -->
         <el-dropdown trigger="click" v-if="userInfo" style="cursor: pointer;" popper-class="lumina-dropdown-popper">
@@ -81,23 +81,19 @@ const handleLogOut = () => {
 
     <!-- 主内容区 -->
     <el-main class="flex justify-center" >
-      <div class="flex items-center justify-between w-full" style="max-width: 1200px; gap: 4rem;">
+      <div class="flex items-center justify-between w-full" style=" gap: 4rem;">
         <router-view></router-view>
       </div>
     </el-main>
 
     <!-- 底部栏 -->
-    <el-footer class="flex justify-between items-center mt-auto py-6 fixed z-20 w-full" style="position: fixed; bottom: 0; max-width: 1280px; margin-left: auto; margin-right: auto; border-top: 1px solid rgba(21, 128, 61, 0.05); background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);">
+    <el-footer class="flex justify-between items-center mt-auto py-6 w-full" style="max-width: 1280px; margin-left: auto; margin-right: auto; border-top: 1px solid rgba(21, 128, 61, 0.05); background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);">
       <div class="flex items-center gap-2 px-6 w-full justify-between">
         <div class="flex items-center gap-2">
-          <span class="font-serif font-bold text-lg" style="color: var(--lumina-surface);">Lumina</span>
-          <span class="text-sm" style="color: rgba(21, 128, 61, 0.6);">© 2026 Virtual Try-On Project. 保留所有权利。</span>
+          <span class="font-serif font-bold text-lg" style="color: var(--lumina-surface);">copyright </span>
+          <span class="text-sm" style="color: rgba(21, 128, 61, 0.6);"> @ 邱俊林、吴绍宝、麦弘滔、彭明跃、孔文皓、李诺</span>
         </div>
-        <div class="flex gap-6 text-sm" style="color: rgba(21, 128, 61, 0.7);">
-          <a href="#" class="footer-link">隐私政策</a>
-          <a href="#" class="footer-link">服务条款</a>
-          <a href="#" class="footer-link">联系支持</a>
-        </div>
+        
       </div>
     </el-footer>
   </el-container>

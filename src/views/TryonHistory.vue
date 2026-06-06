@@ -167,12 +167,12 @@ const handleBatchDelete = () => {
 <template>
   <div class="history-container">
     <!-- Header -->
-    <div class="header-section">
+    <!-- <div class="header-section">
       <div class="glass-tag tag-margin">
         <span class="pulse-dot"></span> 我的记录
       </div>
-      <h1 class="font-serif text-5xl font-bold text-gradient">试穿历史</h1>
-    </div>
+      <h1 class="font-serif text-3xl font-bold text-gradient">试穿历史</h1>
+    </div> -->
 
     <!-- Statistics Card -->
     <div class="glass-panel stat-card">
@@ -281,7 +281,7 @@ const handleBatchDelete = () => {
 
 <style scoped>
 .history-container {
-  padding: 2rem 1.5rem;
+  padding: 1rem 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -334,7 +334,7 @@ const handleBatchDelete = () => {
 
 .stat-item {
   flex: 1;
-  min-width: 150px;
+  min-width: 120px;
   text-align: center;
   padding: 1.5rem;
   border-radius: 1.5rem; /* rounded-2xl */
@@ -347,7 +347,7 @@ const handleBatchDelete = () => {
 }
 
 .stat-value {
-  font-size: 2.25rem; /* text-4xl */
+  font-size: 1.25rem; /* text-4xl */
   font-weight: 700;
   margin-bottom: 0.5rem;
   line-height: 1.2;

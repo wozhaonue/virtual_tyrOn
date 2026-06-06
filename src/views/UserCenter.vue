@@ -224,13 +224,9 @@ const handleBanUser = async (row,column) => {
         <h1 class="font-serif text-2xl font-bold title-text">个人中心</h1>
         <span class="font-sans text-xs uppercase subtitle-text tracking-wider">User Center</span>
       </div>
-
       <el-tabs v-model="activeTab" class="custom-tabs">
         <el-tab-pane label="个人中心" name="personal">
-          <div class="personal-content flex flex-col mt-4">
-            
-            <!-- Avatar Section -->
-            <div class="avatar-section flex flex-col items-center justify-center mb-6">
+          <div class="avatar-section flex flex-col items-center justify-center mb-6">
               <div class="avatar-wrapper">
                 <el-avatar :size="100" :src="formData.avatar_url || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'" class="avatar-img" />
                 <el-upload
@@ -250,9 +246,10 @@ const handleBanUser = async (row,column) => {
                 <p class="text-xs font-semibold uppercase tracking-wider id-text">ID: {{ formData.user_id || 'xxx' }}</p>
               </div>
             </div>
-
+          <div class="personal-content flex flex-row mt-4">
+            <!-- Avatar Section --> 
             <!-- Form Section -->
-            <el-form label-position="top" :model="formData" class="custom-form w-full">
+            <el-form :inline="true" label-position="top" :model="formData" class="custom-form w-full">
               <el-form-item label="用户ID">
                 <el-input v-model="formData.user_id" disabled placeholder="用户ID" />
               </el-form-item>
@@ -266,12 +263,11 @@ const handleBanUser = async (row,column) => {
                 <el-input v-model="formData.phone" placeholder="请输入手机号" />
               </el-form-item>
               <el-form-item label="性别">
-                <el-select v-model="formData.gender" placeholder="请选择性别" class="w-full">
+                <el-select v-model="formData.gender" placeholder="请选择性别" >
                   <el-option label="男" value="male" />
                   <el-option label="女" value="female" />
                 </el-select>
-              </el-form-item>
-              
+              </el-form-item>    
               <div class="form-actions mt-4">
                 <button type="button" @click="handleSave" class="btn-accent save-btn font-sans font-semibold">
                   保存修改
@@ -353,30 +349,29 @@ const handleBanUser = async (row,column) => {
 <style scoped>
 /* 页面外层容器：由于 base.css 已经设置了 body 的 background 和光球动画，这里只需控制边距和布局 */
 .user-center-page {
-  padding: 40px 60px;
+  padding: 10px 60px;
   display: flex;
   justify-content: flex-start; /* 左侧对齐 */
   align-items: flex-start;
-  min-height: calc(100vh - 100px);
+  min-height: 800px;
 }
 
 /* 侧边栏卡片样式 */
 .user-center-card {
-  min-width: 400px;
-  width: auto;
+  min-width: 500px;
   max-width: 1200px;
   padding: 30px;
-  min-height: 800px;
+  min-height: 500px;
   display: flex;
   flex-direction: column;
 }
 
 /* 如果是管理员，可能需要更宽的卡片来展示表格，使用动态宽度或者让内容溢出滚动 */
-.user-center-card:has(.admin-content) {
+/* .user-center-card:has(.admin-content) {
   width: auto;
   min-width: 360px;
   max-width: 900px;
-}
+} */
 
 /* 标题样式 */
 .header-title {
@@ -465,7 +460,7 @@ const handleBanUser = async (row,column) => {
 /* 管理员面板样式 */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
 .stat-card {
@@ -565,9 +560,18 @@ const handleBanUser = async (row,column) => {
   height: 1px;
 }
 
-/* Form overrides */
+.custom-form {
+  width: 550px;
+}
+/* 组件库表单样式深钻覆盖 */
 :deep(.custom-form .el-form-item) {
   margin-bottom: 16px;
+}
+:deep(.custom-form .el-input) {
+  --el-input-width: 220px;
+}
+:deep(.custom-form .el-select) {
+  --el-select-width: 220px;
 }
 :deep(.custom-form .el-form-item__label) {
   font-family: var(--el-font-family);

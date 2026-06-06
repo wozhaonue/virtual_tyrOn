@@ -212,11 +212,11 @@ const startTryOn = async () => {
 }
 
 // 左边衣橱数据
-const isWardrobeOpen = ref(false)
+const isWardrobeOpen = ref(true);
 const categories = ['全部', '上装', '下装', '连体装']
 const activeCategory = ref('全部')
 const isRecognizing = ref(false)
-
+const isRecommendOpen = ref(true);
 // 选择的衣物
 const selectedTop = ref<any>(null)
 const selectedBottom = ref<any>(null)
@@ -373,11 +373,11 @@ const useAIMode = ref(true);
 <template>
   <div class="tryOn-home">
     <!-- 导航展示品牌 -->
-    <div class="top-nav glass-nav">
+    <!-- <div class="top-nav glass-nav">
       <span class="font-serif font-bold text-gradient text-2xl">Lumina Try-On</span>
       <div class="nav-divider"></div>
       <span class="font-sans opacity-80 text-sm">AI 虚拟试穿体验</span>
-    </div>
+    </div> -->
 
     <!-- 中心区域试装镜 -->
     <div class="center-area flex flex-col items-center">
@@ -468,7 +468,6 @@ const useAIMode = ref(true);
             <p class="font-sans font-semibold text-xs text-center truncate w-full" :title="cloth.clothes_name">{{ cloth.clothes_name }}</p>
           </div>
         </div>
-        
         <!-- 智能识别 -->
         <div class="recognition-area glass-panel">
           <h3 class="font-sans font-semibold text-sm flex items-center gap-2">
@@ -492,8 +491,8 @@ const useAIMode = ref(true);
               </div>
             </div>
           </el-upload>
-          
         </div>
+        
       </div>
       
       <div class="toggle-btn glass-panel" @click="isWardrobeOpen = !isWardrobeOpen">
@@ -503,15 +502,13 @@ const useAIMode = ref(true);
     </div>
 
     <!-- 右部推荐 -->
-    <div class="right-recommendations">
-      <div class="hover-trigger glass-panel">
-        <el-icon class="arrow-left"><ArrowLeft /></el-icon>
-        <el-icon class="arrow-right"><ArrowRight /></el-icon>
+    <div class="right-recommendations" :class="{ 'is-open': isRecommendOpen }">
+      <div class="hover-trigger glass-panel" @click="isRecommendOpen = !isRecommendOpen">
         <div class="toggle-indicator"></div>
+        <el-icon><ArrowLeft v-if="!isRecommendOpen" /><ArrowRight v-else /></el-icon>
       </div>
-      
       <div class="recommendation-panel glass-panel">
-        <h2 class="font-serif font-bold text-gradient text-2xl mb-6">穿搭指南</h2>
+        <h2 class="font-serif font-bold text-gradient text-2xl">穿搭指南</h2>
         
         <div class="weather-gender glass-panel flex justify-between items-center">
           <div class="weather flex items-center gap-4">
@@ -593,7 +590,7 @@ const useAIMode = ref(true);
 <style scoped>
 .tryOn-home {
   width: 100%;
-  min-height: 100vh;
+  height: auto;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -623,8 +620,8 @@ const useAIMode = ref(true);
 /* Center Area */
 .center-area {
   z-index: 10;
-  gap: 2rem;
-  margin-top: 6rem;
+  gap: 0.5rem;
+  /* margin-top: 6rem; */
 }
 
 .model-container {
@@ -654,8 +651,8 @@ const useAIMode = ref(true);
 .dot.green { background-color: rgba(74, 222, 128, 0.8); }
 
 .model-image-wrapper {
-  width: 340px;
-  height: 540px;
+  width: 240px;
+  height: 440px;
   border-radius: 1.5rem;
   overflow: hidden;
   position: relative;
@@ -856,7 +853,7 @@ const useAIMode = ref(true);
   overflow-y: auto;
   padding-right: 0.25rem;
 }
-.clothes-grid::-webkit-scrollbar { display: none; }
+/* .clothes-grid::-webkit-scrollbar { display: none; } */
 
 .clothing-item {
   border-radius: 1rem;
@@ -1003,7 +1000,7 @@ const useAIMode = ref(true);
   transform: translateX(calc(100% - 3rem));
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.right-recommendations:hover {
+.right-recommendations.is-open {
   transform: translateX(0);
 }
 
@@ -1040,7 +1037,7 @@ const useAIMode = ref(true);
   border-radius: 2.5rem 0 0 2.5rem;
   padding: 2rem 1.5rem;
   display: flex;
-  gap: 2.5rem;
+  gap: 1.5rem;
   flex-direction: column;
   border-right: none;
   box-shadow: -20px 0 40px rgba(21, 128, 61, 0.08);
