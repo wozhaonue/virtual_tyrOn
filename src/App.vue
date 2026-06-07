@@ -80,7 +80,7 @@ const handleLogOut = () => {
     </el-header>
 
     <!-- 主内容区 -->
-    <el-main class="flex justify-center" >
+    <el-main class="flex justify-center" style="min-height: 90vh;" >
       <div class="flex items-center justify-between w-full" style=" gap: 4rem;">
         <router-view></router-view>
       </div>

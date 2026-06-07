@@ -514,17 +514,17 @@ const handleSubmit = async() => {
 /* Right Side */
 .modal-right {
   width: 60%;
-  padding: 3rem;
-  background-color: rgba(255, 255, 255, 0.6);
+  padding: 3rem 4rem;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
 }
 
 .tabs-container {
   display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #f1f5f9;
   flex-shrink: 0;
 }
 
@@ -542,11 +542,11 @@ const handleSubmit = async() => {
   background: transparent;
 }
 .scrollable-content::-webkit-scrollbar-thumb {
-  background-color: rgba(21, 128, 61, 0.2);
+  background-color: rgba(21, 128, 61, 0.1);
   border-radius: 10px;
 }
 .scrollable-content::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(21, 128, 61, 0.4);
+  background-color: rgba(21, 128, 61, 0.2);
 }
 
 .tab-btn {
@@ -575,24 +575,24 @@ const handleSubmit = async() => {
 
 .tab-indicator {
   position: absolute;
-  bottom: 0;
+  bottom: -1px;
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: #ec4899;
+  background-color: #15803d;
 }
 
 /* Form Styles */
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.5rem;
 }
 
 .form-label {
@@ -600,7 +600,7 @@ const handleSubmit = async() => {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(20, 83, 45, 0.7);
+  color: #14532d;
   margin-left: 0.25rem;
 }
 
@@ -624,12 +624,12 @@ const handleSubmit = async() => {
 
 .form-input {
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
   border-radius: 1rem;
   padding: 0.875rem 1.25rem;
   font-size: 0.875rem;
-  color: #1f2937;
+  color: #14532d;
   transition: all 0.3s ease;
   outline: none;
 }
@@ -639,8 +639,9 @@ const handleSubmit = async() => {
 }
 
 .form-input:focus {
-  background-color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.5);
+  background-color: #ffffff;
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
 }
 
 .form-select {
@@ -728,13 +729,17 @@ const handleSubmit = async() => {
 }
 
 .submit-btn-login {
-  background-color: #ec4899;
-  box-shadow: 0 4px 14px 0 rgba(236, 72, 153, 0.39);
+  background-color: #15803d;
+  box-shadow: 0 4px 14px 0 rgba(21, 128, 61, 0.39);
+  /* background-color: #ec4899;
+  box-shadow: 0 4px 14px 0 rgba(236, 72, 153, 0.39); */
 }
 
 .submit-btn-login:hover {
-  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.23);
+  box-shadow: 0 6px 20px rgba(21, 128, 61, 0.23);
   transform: translateY(-2px);
+  /* box-shadow: 0 6px 20px rgba(236, 72, 153, 0.23);
+  transform: translateY(-2px); */
 }
 
 .submit-btn-register {

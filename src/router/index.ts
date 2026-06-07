@@ -1,6 +1,7 @@
 import { useUserStore } from '@/stores/userModal.ts'
 import Home from '@/views/Home.vue'
 import NotFound from '@/views/notFound.vue'
+import { ElMessage } from 'element-plus'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -42,8 +43,13 @@ router.beforeEach((to,from) => {
     if(localStorage.getItem('auth_token') && localStorage.getItem('user_id')){
       return true;
     }
+    ElMessage({
+            message: '请先登录后再进行操作',
+            type: 'info',
+          })
     useUserStore().setUserModalVisible(true);
     return false;
   }
+  return true;
 })
 export default router
