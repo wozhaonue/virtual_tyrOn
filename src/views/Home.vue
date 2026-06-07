@@ -208,7 +208,9 @@ const startTryOn = async () => {
         ElMessage.info(res.msg || '组合试穿异常');
       }
       }else{
-        const cid = selectedTop.value.id || selectedBottom.value.id || selectedOnePiece.value.id;
+        console.log(mode);
+        const cid = selectedTop.value?.id || selectedBottom.value?.id || selectedOnePiece.value?.id;
+        console.log(cid);
         fd.append(`${mode}_id`,cid);
         fd.append('file',personPhotoFile.value);
         const res = await singleTryOnWithAI(mode,fd);
@@ -411,42 +413,48 @@ const useAIMode = ref(true);
     <!-- 中心区域试装镜 -->
     <div class="center-area flex flex-col items-center">
       <div class="model-container glass-panel">
-        <div class="window-controls">
-          <div class="dot red"></div>
-          <div class="dot yellow"></div>
-          <div class="dot green"></div>
-        </div>
         
-        <div class="model-image-wrapper">
-          <el-upload
-            class="model-upload"
-            action="#"
-            :auto-upload="false"
-            :show-file-list="false"
-            accept=".jpg,.jpeg,.png,.bmp,.webp"
-            :on-change="handlePersonPhotoChange"
-          >
-            <div v-if="personPhotoUrl || resultImg_url" class="uploaded-model" :style="{ backgroundImage: `url(${resultImg_url || personPhotoUrl})`, backgroundSize: 'contain'}"></div>
-            <div v-else class="model-placeholder">
-              <el-icon v-if="gender === 'female'" class="placeholder-icon"><Female /></el-icon>
-              <el-icon v-else-if="gender === 'male'" class="placeholder-icon"><Male /></el-icon>
-              <el-icon v-else class="placeholder-icon"><Female /></el-icon>
-              <span class="font-sans text-lg">点击上传模特全身照</span>
-              <span class="font-sans text-xs opacity-80 mt-2">支持 JPG/PNG/BMP/WebP</span>
+        <div class="model-images-container flex gap-4 mt-2">
+          <!-- 左侧：原图上传 -->
+          <div class="model-image-wrapper">
+            <el-upload
+              class="model-upload"
+              action="#"
+              :auto-upload="false"
+              :show-file-list="false"
+              accept=".jpg,.jpeg,.png,.bmp,.webp"
+              :on-change="handlePersonPhotoChange"
+            >
+              <div v-if="personPhotoUrl" class="uploaded-model" :style="{ backgroundImage: `url(${personPhotoUrl})`, backgroundSize: 'contain'}"></div>
+              <div class="model-placeholder" :class="{ 'hover-overlay': personPhotoUrl }">
+                <el-icon v-if="gender === 'female'" class="placeholder-icon"><Female /></el-icon>
+                <el-icon v-else-if="gender === 'male'" class="placeholder-icon"><Male /></el-icon>
+                <el-icon v-else class="placeholder-icon"><Female /></el-icon>
+                <span class="font-sans text-sm font-semibold">{{ personPhotoUrl ? '重新上传全身照' : '上传模特全身照' }}</span>
+              </div>
+            </el-upload>
+          </div>
+
+          <!-- 右侧：试穿结果 -->
+          <div class="model-image-wrapper">
+            <div v-if="resultImg_url" class="uploaded-model" :style="{ backgroundImage: `url(${resultImg_url})`, backgroundSize: 'contain'}"></div>
+            <div v-else class="model-placeholder result-placeholder">
+              <el-icon class="placeholder-icon"><MagicStick /></el-icon>
+              <span class="font-sans text-sm font-semibold opacity-80">试穿效果展示</span>
             </div>
-          </el-upload>
-          
-          <div v-if="isTryingOn" class="tryon-overlay">
-            <div class="scanning-line"></div>
-            <div class="glass-tag loading-tag">
-              <el-icon class="is-loading loading-icon"><Loading /></el-icon>
-              <span class="font-sans font-semibold tracking-wider">AI 生成中...</span>
+            
+            <div v-if="isTryingOn" class="tryon-overlay">
+              <div class="scanning-line"></div>
+              <div class="glass-tag loading-tag">
+                <el-icon class="is-loading loading-icon"><Loading /></el-icon>
+                <span class="font-sans font-semibold tracking-wider text-xs mt-2">AI 生成中...</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="tryon-options glass-panel flex items-center justify-between px-6 py-3 w-full max-w-[340px] rounded-full mt-4 mb-2">
+      <div style="width: 70%;" class="tryon-options glass-panel flex items-center justify-between px-6 py-3 max-w-[240px] rounded-full mt-4 mb-2">
         <span class="font-sans font-semibold text-sm text-primary">使用在线 AI 引擎</span>
         <el-switch v-model="useAIMode" active-color="#15803D" />
       </div>
@@ -606,7 +614,7 @@ const useAIMode = ref(true);
       </div>
     </div>
 
-    <!-- Recognition Modal -->
+    <!-- 识别衣物弹窗 -->
     <recModal 
       v-model="showRecModal" 
       :rec-real-image-url="recRealImageUrl"
@@ -619,7 +627,7 @@ const useAIMode = ref(true);
 <style scoped>
 .tryOn-home {
   width: 100%;
-  height: auto;
+  min-height: 90vh;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -670,18 +678,18 @@ const useAIMode = ref(true);
   gap: 0.375rem;
   z-index: 20;
 }
-.dot {
+/* .dot {
   width: 0.625rem;
   height: 0.625rem;
   border-radius: 9999px;
 }
 .dot.red { background-color: rgba(248, 113, 113, 0.8); }
 .dot.yellow { background-color: rgba(250, 204, 21, 0.8); }
-.dot.green { background-color: rgba(74, 222, 128, 0.8); }
+.dot.green { background-color: rgba(74, 222, 128, 0.8); } */
 
 .model-image-wrapper {
-  width: 240px;
-  height: 440px;
+  width: 220px;
+  height: 400px;
   border-radius: 1.5rem;
   overflow: hidden;
   position: relative;
@@ -703,6 +711,25 @@ const useAIMode = ref(true);
 .model-placeholder:hover {
   background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
   color: rgba(21, 128, 61, 0.6);
+}
+.model-placeholder.hover-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  color: var(--lumina-primary);
+  z-index: 10;
+}
+:deep(.model-upload .el-upload:hover) .model-placeholder.hover-overlay {
+  opacity: 1;
+}
+.result-placeholder {
+  cursor: default;
+}
+.result-placeholder:hover {
+  background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
+  color: rgba(21, 128, 61, 0.4);
 }
 .placeholder-icon {
   font-size: 3.75rem;

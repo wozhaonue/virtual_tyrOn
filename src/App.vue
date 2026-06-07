@@ -58,7 +58,7 @@ const handleLogOut = () => {
           <router-link active-class="active" to="/" class="nav-link font-sans text-base font-medium">主页</router-link>
           <router-link active-class="active" to="/tryOnHistory" class="nav-link font-sans text-base font-medium">试穿历史</router-link>
           <router-link active-class="active" to="/userCenter" class="nav-link font-sans text-base font-medium">个人中心</router-link>
-          <a target="_blank" href="https://github.com/wozhaonue?tab=repositories" class="nav-link font-sans text-base font-medium">关于我们</a>
+          <!-- <a target="_blank" href="https://github.com/wozhaonue?tab=repositories" class="nav-link font-sans text-base font-medium">关于我们</a> -->
         </div>
         <!-- 设置trigger为click以抵消默认焦点样式触发 -->
         <el-dropdown trigger="click" v-if="userInfo" style="cursor: pointer;" popper-class="lumina-dropdown-popper">

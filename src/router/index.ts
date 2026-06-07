@@ -43,10 +43,10 @@ router.beforeEach((to,from) => {
     if(localStorage.getItem('auth_token') && localStorage.getItem('user_id')){
       return true;
     }
-    ElMessage({
-            message: '请先登录后再进行操作',
-            type: 'info',
-          })
+    // ElMessage({
+    //         message: '请先登录后再进行操作',
+    //         type: 'info',
+    //       })
     useUserStore().setUserModalVisible(true);
     return false;
   }
