@@ -4,6 +4,7 @@ import { loginUser, registerUser } from '@/apis/user';
 import { ElMessage } from 'element-plus';
 import { useUserStore } from '@/stores/userModal';
 import { useUserInfoStore } from '@/stores/userInfo';
+import router from '@/router';
 
 const userInfoStore = useUserInfoStore();
 const userStore = useUserStore();
@@ -71,6 +72,8 @@ const handleSubmit = async() => {
         })
         userInfoStore.fetchUserInfo();
         userStore.setUserModalVisible(false);
+        router.go(0);
+        
       }else{
         ElMessage({
           message: data.msg,

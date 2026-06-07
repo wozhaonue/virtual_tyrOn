@@ -3,6 +3,7 @@ import { ref, computed, onMounted, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete, Check } from '@element-plus/icons-vue'
 import { batchDeleteHistory, deleteOneHistory, getTryOnHistory, getTryOnStatistics } from '@/apis/tryOn';
+import axios from 'axios';
 
 interface statisInter {
   total_try_ons: number;
@@ -37,6 +38,10 @@ onMounted(async() => {
       })
     }
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({
       message: err.message || '试穿数据获取异常',
@@ -55,6 +60,10 @@ onMounted(async() => {
       })
     }
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({
       message: '试穿记录获取异常',
@@ -122,6 +131,10 @@ const handleDelete = async (id: number) => {
       historyImages.value = oldHistoryImages;
     }
   }).catch((err) => {
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({
       message: err.message || '删除记录异常',
@@ -155,6 +168,10 @@ const handleBatchDelete = () => {
       historyImages.value = oldHistoryImages;
     }
   }).catch((err) => {
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage.error(err.message || '批量删除异常');
     historyImages.value = oldHistoryImages;

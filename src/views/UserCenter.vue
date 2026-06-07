@@ -7,6 +7,7 @@ import { getUserInfo, updateUserInfo, uploadUserImage } from '@/apis/user';
 import { banAdminUser, getAdminData } from '@/apis/admin';
 import { resolveAny } from 'dns';
 import { getAdminUserTableData } from '../apis/admin';
+import axios from 'axios';
 
 const userInfoStore = useUserInfoStore();
 const activeTab = ref('personal');
@@ -45,6 +46,10 @@ const mountedUserFunc = async () => {
       })
     }
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({
       message: err.message,
@@ -60,6 +65,10 @@ const userListChange = async() => {
         userList.value = res.data;
       }
     }catch(err){
+      if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
       console.log(err);
       ElMessage({
         message: err.message || '用户列表获取失败',
@@ -83,6 +92,10 @@ const moutedAdminFunc = async () => {
         })
       }
     }catch(err){
+      if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
       console.log(err);
       ElMessage({
         message: err.message || '网络异常',
@@ -112,6 +125,10 @@ const handleAvatarChange = async (file: any) => {
       })
     }
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({message: err.message || '上传失败', type: 'error'});
   }
@@ -147,6 +164,10 @@ const handleSave = async () => {
         })
       }
     }catch(err){
+      if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
       console.log(err);
       ElMessage({
         message: err.message ?? '更新失败',
@@ -207,6 +228,10 @@ const handleBanUser = async (row,column) => {
             })
           }
       }catch(err){
+        if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
         console.log(err);
         ElMessage({
           message: '操作异常',

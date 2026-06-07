@@ -20,6 +20,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { combineTryOnWithAI, deleteCloth, getRecGen, getRecPersonal, getWardrobe, getWeather, postClothRec, postClothUpload, singleTryOnWithAI, tryOnWithOnlineAI } from '@/apis/tryOn';
 import { getUserInfo } from '@/apis/user';
 import recModal from '@/components/recModal.vue';
+import axios from 'axios';
 
 interface weatherDataInter {
   city: string | null;
@@ -62,6 +63,10 @@ onMounted(async () => {
     const res = await getWeather();
     weatherData.value = res;
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({
       message: err.message || '获取天气失败',
@@ -80,6 +85,10 @@ onMounted(async () => {
       })
     }
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({
         message: '获取个人特征信息失败',
@@ -100,6 +109,10 @@ onMounted(async () => {
     }
     console.log(PerRes);
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({
       message: err.message || "获取推荐异常",
@@ -126,6 +139,10 @@ onMounted(async () => {
       })
     }
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({
       message: err.message || '衣橱数据加载异常',
@@ -204,6 +221,10 @@ const startTryOn = async () => {
       }
     }
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage.error(err.message || '试穿异常');
   }finally{
@@ -278,6 +299,10 @@ const handleDeleteCloth = (cloth: any, event: Event) => {
       ElMessage.info('云端删除失败');
     }
   }).catch((err) => {
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage.error(err.message || '云端删除失败');
   });
@@ -330,6 +355,10 @@ const handleImageUpload = async (file: any) => {
       })
     }
   }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
     console.log(err);
     ElMessage({
       message: err.message || '识别失败',
