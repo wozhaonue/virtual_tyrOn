@@ -78,6 +78,7 @@ const handleConfirm = async () => {
         type: 'success',
       })
       // emit加载衣物
+      
     }
   }catch(err){
     console.log(err);

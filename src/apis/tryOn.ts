@@ -34,7 +34,7 @@ export const getRecGen = (gender:string) => {
 // 获取个性化穿搭推荐
 export const getRecPersonal = (gender:string) => {
   const filterGenderStr = gender === 'female' ? '女' : '男';
-  return request.post('/recommend/general',{
+  return request.post('/recommend/personalized',{
     gender: filterGenderStr,
     use_mock: true,
   });

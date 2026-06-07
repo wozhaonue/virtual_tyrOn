@@ -45,18 +45,19 @@ interface recommendGenInter {
   onepiece: string | null;
   description: string | null;
 }
+interface recommendPerInter {
+  rank: number;
+  name: string;
+  score: number;
+  reason: string;
+}
 const recommendGen = ref<recommendGenInter>({
   top: '',
   bottom: '',
   onepiece: '',
   description: '',
 })
-const recommendPer = ref<recommendGenInter>({
-  top: '',
-  bottom: '',
-  onepiece: '',
-  description: '',
-})
+const recommendPer = ref<recommendPerInter[]>([]);
 const wardrobeData = ref({});
 onMounted(async () => {
   try{
@@ -103,7 +104,7 @@ onMounted(async () => {
       console.error(genRes.reason);
     }
     if(PerRes.status === 'fulfilled'){
-      recommendPer.value = PerRes.value.recommendation;
+      recommendPer.value = PerRes.value.top3_recommendations;
     }else{
       console.error(PerRes.reason);
     }
@@ -598,18 +599,21 @@ const useAIMode = ref(true);
             </div>
             为您精选
           </h3>
-          <div class="outfits-grid">
-            <div v-if="recommendPer.top"  class="outfit-card large glass-panel flex flex-col items-center">
-              <span class="font-sans font-semibold text-xs opacity-80 mt-2">{{ recommendPer.top }}</span>
-            </div>
-            <div v-if="recommendPer.bottom"  class="outfit-card large glass-panel flex flex-col items-center">
-              <span class="font-sans font-semibold text-xs opacity-80 mt-2">{{ recommendPer.bottom }}</span>
-            </div>
-            <div v-if="recommendPer.onepiece"  class="outfit-card large glass-panel flex flex-col items-center">
-              <span class="font-sans font-semibold text-xs opacity-80 mt-2">{{ recommendPer.onepiece }}</span>
+          <div class="outfits-list flex flex-col gap-3">
+            <div 
+              v-for="item in recommendPer.slice().sort((a, b) => a.rank - b.rank).slice(0, 3)" 
+              :key="item.rank" 
+              class="recommend-card glass-panel"
+            >
+              <div class="recommend-card-content flex flex-col gap-2">
+                <div class="recommend-rank-title font-sans">
+                  <span>第{{ item.rank }}名：{{ item.name }}</span>
+                  <span class="recommend-score">{{ item.score }}</span>
+                </div>
+                <span class="recommend-reason font-sans opacity-80">{{ item.reason }}</span>
+              </div>
             </div>
           </div>
-           <div style="font-size: 0.8rem;">{{ recommendPer.description }}</div>
         </div>
       </div>
     </div>
@@ -1173,4 +1177,43 @@ const useAIMode = ref(true);
   background-color: rgba(255, 255, 255, 0.6) !important;
   border-color: var(--lumina-secondary) !important;
 }
+.personalized-outfits {
+  width: 100%;
+}
+
+.recommend-card {
+  position: relative;
+  padding: 1rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.recommend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(21, 128, 61, 0.1);
+}
+
+.recommend-rank-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--lumina-surface);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recommend-score {
+  font-size: 1rem;
+  color: var(--lumina-accent);
+  font-weight: 600;
+  margin-left: 1rem;
+}
+
+.recommend-reason {
+  font-size: 0.875rem;
+  color: var(--lumina-surface);
+}
+
 </style>
