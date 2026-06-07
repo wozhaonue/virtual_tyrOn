@@ -93,7 +93,7 @@ const handleSubmit = async() => {
       formData.append('nickname',registerForm.value.nickname);
       formData.append('password',registerForm.value.password);
       formData.append('role',registerForm.value.role);
-      if(registerForm.value.role === 'admin') formData.append('adminKey',registerForm.value.adminKey);
+      if(registerForm.value.role === 'admin') formData.append('admin_key',registerForm.value.adminKey);
       const data = await registerUser(formData);
       console.log(data);
       if(data.code === 200){
@@ -103,6 +103,11 @@ const handleSubmit = async() => {
           type: 'success',
         })
         activeTab.value = 'login';
+      }else{
+        ElMessage({
+          message: data?.msg || '注册失败',
+          type: 'info',
+        });
       }
     }catch(err){
       console.log(err);
