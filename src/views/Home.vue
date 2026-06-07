@@ -120,6 +120,9 @@ onMounted(async () => {
       type: 'error',
     })
   }
+  loadWardrobe();
+})
+const loadWardrobe = async() => {
   try{
     const res = await getWardrobe();
     if(res.code === 200){
@@ -150,7 +153,7 @@ onMounted(async () => {
       type: 'error',
     })
   }
-})
+}
 // 中心试穿镜数据
 const isTryingOn = ref(false);
 const resultImg_url = ref('');
@@ -619,7 +622,8 @@ const useAIMode = ref(true);
     </div>
 
     <!-- 识别衣物弹窗 -->
-    <recModal 
+    <recModal
+      @refresh="loadWardrobe" 
       v-model="showRecModal" 
       :rec-real-image-url="recRealImageUrl"
       :recImageUrl="recImageUrl" 

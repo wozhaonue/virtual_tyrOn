@@ -22,10 +22,13 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue', 'confirm'])
+const emit = defineEmits(['update:modelValue', 'refresh'])
 
 const close = () => {
   emit('update:modelValue', false)
+}
+const refresh = () => {
+  emit('refresh');
 }
 
 const formDataList = ref<any[]>([])
@@ -78,7 +81,7 @@ const handleConfirm = async () => {
         type: 'success',
       })
       // emit加载衣物
-      
+      refresh();
     }
   }catch(err){
     console.log(err);
