@@ -602,7 +602,7 @@ const useAIMode = ref(true);
             </div>
             为您精选
           </h3>
-          <div class="outfits-list flex flex-col gap-3">
+          <div class="outfits-list flex flex-col gap-6">
             <div 
               v-for="item in recommendPer.slice().sort((a, b) => a.rank - b.rank).slice(0, 3)" 
               :key="item.rank" 
