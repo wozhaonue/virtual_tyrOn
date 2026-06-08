@@ -20,6 +20,9 @@ const statistics = reactive<statisInter>({
   onepiece_try_ons: 0,
   combo_try_ons: 0,
 })
+// 控制骨架屏加载状态的变量
+const loadingStats = ref(true);
+const loadingHistory = ref(true);
 onMounted(async() => {
   try{
     const res = await getTryOnStatistics();
@@ -47,6 +50,8 @@ onMounted(async() => {
       message: err.message || '试穿数据获取异常',
       type: 'error',
     })
+  }finally{
+    loadingStats.value = false;
   }
   try{
     const res = await getTryOnHistory();
@@ -69,6 +74,8 @@ onMounted(async() => {
       message: '试穿记录获取异常',
       type: 'error',
     })
+  }finally{
+    loadingHistory.value = false;
   }
 })
 interface historyItemInter {
@@ -194,7 +201,24 @@ const handleBatchDelete = () => {
     <!-- Statistics Card -->
     <div class="glass-panel stat-card">
       <h2 class="font-serif text-2xl font-bold section-title">试穿统计</h2>
-      <div class="stat-grid">
+      <el-skeleton :loading="loadingStats" animated :throttle="{
+        leading: 500, trailing: 500, initVal: true
+      }">
+        <template #template>
+          <div class="stat-grid">
+            <div v-for="i in 5" :key="i" class="stat-item glass-nav" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <el-skeleton-item
+               variant="h1"
+               style="width: 40%;
+               margin-bottom: 12px;" />
+               <el-skeleton-item
+               variant="text"
+               style="width: 60%;" />
+            </div>
+          </div>
+        </template>
+        <template #default>
+          <div class="stat-grid">
         <div class="stat-item glass-nav">
           <div class="stat-value text-gradient">{{ statistics.total_try_ons }}</div>
           <div class="stat-label">总试穿次数</div>
@@ -216,6 +240,8 @@ const handleBatchDelete = () => {
           <div class="stat-label">组合搭配</div>
         </div>
       </div>
+        </template>
+      </el-skeleton>
     </div>
 
     <!-- Image Records Card -->
@@ -242,7 +268,26 @@ const handleBatchDelete = () => {
         </div>
       </div>
 
-      <div class="image-grid">
+      
+      <el-skeleton
+      :loading="loadingHistory"
+      animated :throttle="{
+        leading: 500,
+        trailing: 500,
+        initVal: true,
+      }">
+        <template #template>
+          <div class="image-grid">
+            <div v-for="i in 8" :key="i" class="history-item">
+              <el-skeleton-item 
+              variant="image"
+              style="width: 100%;
+              height:100%;"/>
+            </div>
+          </div>
+        </template>
+        <template #default>
+          <div class="image-grid">
         <div 
           v-for="(item, index) in historyImages" 
           :key="item.id" 
@@ -292,6 +337,8 @@ const handleBatchDelete = () => {
           <el-button type="primary" class="btn-accent" round>去试穿</el-button>
         </div>
       </div>
+        </template>
+      </el-skeleton>
     </div>
   </div>
 </template>
