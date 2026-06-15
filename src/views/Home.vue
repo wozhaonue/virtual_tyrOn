@@ -14,7 +14,8 @@ import {
   Location,
   Star,
   Ship,
-  Close
+  Close,
+  Check
 } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { combineTryOnWithAI, deleteCloth, getRecGen, getRecPersonal, getWardrobe, getWeather, postClothRec, postClothUpload, singleTryOnWithAI, tryOnWithOnlineAI } from '@/apis/tryOn';
@@ -59,7 +60,8 @@ const recommendGen = ref<recommendGenInter>({
 })
 const recommendPer = ref<recommendPerInter[]>([]);
 const wardrobeData = ref({});
-onMounted(async () => {
+// 获取天气
+const fetchWeather = async () => {
   try{
     const res = await getWeather();
     weatherData.value = res;
@@ -74,36 +76,17 @@ onMounted(async () => {
       type: 'error',
     })
   }
+}
+// 获取推荐
+const fetchRecommendation = async (userGender: string) => {
   try{
-    const res = await getUserInfo();
-    if(res.code === 200){
-      const data = res.data;
-      gender.value = data.gender;
-    }else{
-      ElMessage({
-        message: '获取个人特征信息失败',
-        type: 'info',
-      })
-    }
-  }catch(err){
-    if (axios.isCancel(err)) {
-    console.log('请求已被拦截器取消:', err.message);
-    return; // 终止后续操作，不弹错误提示
-  }
-    console.log(err);
-    ElMessage({
-        message: '获取个人特征信息失败',
-        type: 'error',
-      })
-  }
-  try{
-    const [genRes,PerRes] = await Promise.allSettled([getRecGen(gender.value),getRecPersonal(gender.value)]);
-    if(genRes.status === 'fulfilled'){
+    const [genRes,PerRes] = await Promise.allSettled([getRecGen(userGender),getRecPersonal(userGender)]);
+    if(genRes.status === 'fulfilled' && genRes.value.code === 200){
       recommendGen.value = genRes.value.recommendation;
     }else{
       console.error(genRes.reason);
     }
-    if(PerRes.status === 'fulfilled'){
+    if(PerRes.status === 'fulfilled' && PerRes.value.code === 200){
       recommendPer.value = PerRes.value.top3_recommendations;
     }else{
       console.error(PerRes.reason);
@@ -120,6 +103,37 @@ onMounted(async () => {
       type: 'error',
     })
   }
+} 
+// 获取个人信息 -- 成功调用链路中获取默认推荐和个人推荐
+const fetchUserInfo = async () => {
+  try{
+    const res = await getUserInfo();
+    if(res.code === 200){
+      const data = res.data;
+      gender.value = data.gender;
+      fetchRecommendation(gender.value);
+    }else{
+      ElMessage({
+        message: '获取个人信息失败',
+        type: 'info',
+      })
+    }
+  }catch(err){
+    if (axios.isCancel(err)) {
+    console.log('请求已被拦截器取消:', err.message);
+    return; // 终止后续操作，不弹错误提示
+  }
+    console.log(err);
+    ElMessage({
+        message: '获取个人特征信息失败',
+        type: 'error',
+      })
+  }
+}
+onMounted(async () => {
+  // 通过封装各自的函数实现并发请求
+  fetchWeather();
+  fetchUserInfo();
   loadWardrobe();
 })
 const loadWardrobe = async() => {
@@ -154,6 +168,7 @@ const loadWardrobe = async() => {
     })
   }
 }
+
 // 中心试穿镜数据
 const isTryingOn = ref(false);
 const resultImg_url = ref('');
@@ -311,6 +326,8 @@ const handleDeleteCloth = (cloth: any, event: Event) => {
   }
     console.log(err);
     ElMessage.error(err.message || '云端删除失败');
+  }).finally(() => {
+    loadWardrobe();
   });
 }
 
@@ -324,6 +341,17 @@ const recRealImageUrl = ref('');
 // 处理衣物识别函数
 const handleImageUpload = async (file: any) => {
   isRecognizing.value = true;
+  // 判断用户上传文件是否符合要求
+  const isImage = ['image/jpeg','image/png'].includes(file.file.type);
+  if(!isImage){
+    ElMessage.error('上传文件需为jpg,png图片格式');
+    return;
+  }
+  const isCheckSize = file.file.size / 1024 / 1024 < 10;
+  if(!isCheckSize){
+    ElMessage.error('上传文件不可超过10MB');
+    return;
+  }
   const fileData = new FormData();
   fileData.append('file',file.file);
   const reader = new FileReader();
@@ -604,7 +632,7 @@ const useAIMode = ref(true);
           </h3>
           <div class="outfits-list flex flex-col gap-6">
             <div 
-              v-for="item in recommendPer.slice().sort((a, b) => a.rank - b.rank).slice(0, 3)" 
+              v-for="item in (recommendPer || []).slice().sort((a, b) => a.rank - b.rank).slice(0, 3)" 
               :key="item.rank" 
               class="recommend-card glass-panel"
             >

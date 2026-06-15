@@ -1,7 +1,7 @@
 import { useUserStore } from '@/stores/userModal.ts'
 import Home from '@/views/Home.vue'
 import NotFound from '@/views/notFound.vue'
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -35,6 +35,11 @@ const router = createRouter({
       path: '/notFound',
       name: 'notFound',
       component: NotFound,
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'Any',
+      redirect: '/notFound',
     }
   ],
 })
@@ -48,6 +53,11 @@ router.beforeEach((to,from) => {
     //         type: 'info',
     //       })
     useUserStore().setUserModalVisible(true);
+    
+    // 处理用户首次直接输入 URL 访问受保护页面时的白屏问题
+    if (!from.name && to.path !== '/') {
+      return '/';
+    }
     return false;
   }
   return true;
