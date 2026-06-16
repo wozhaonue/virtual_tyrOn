@@ -40,4 +40,24 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+        // axios 和 lodash 这种工具库单独提出来
+          if (id.includes('node_modules/axios') || id.includes('node_modules/lodash')) {
+            return 'vendor-utils';
+          }
+          // 2. 将vue及其生态核心（vue，vue-router，pinia）独立打包成一个vendor-vue chunk （只提取稳定的基础库）
+          if(id.includes('node_modules/vue') || id.includes('node_modules/pinia') || id.includes('node_modules/vue-router')){
+            return 'vendor-vue';
+          }
+          // 3. 其余第三方依赖打包成一个vendor chunk
+          if(id.includes('node_modules')){
+            return 'vendor';
+          }
+        }
+      }
+    }
+  }
 })

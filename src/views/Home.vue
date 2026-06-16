@@ -15,7 +15,6 @@ import {
   Star,
   Ship,
   Close,
-  Check
 } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { combineTryOnWithAI, deleteCloth, getRecGen, getRecPersonal, getWardrobe, getWeather, postClothRec, postClothUpload, singleTryOnWithAI, tryOnWithOnlineAI } from '@/apis/tryOn';
