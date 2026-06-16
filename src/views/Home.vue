@@ -84,12 +84,12 @@ const fetchRecommendation = async (userGender: string) => {
     if(genRes.status === 'fulfilled' && genRes.value.code === 200){
       recommendGen.value = genRes.value.recommendation;
     }else{
-      console.error(genRes.reason);
+      console.error(genRes.reason || '获取推荐失败');
     }
     if(PerRes.status === 'fulfilled' && PerRes.value.code === 200){
       recommendPer.value = PerRes.value.top3_recommendations;
     }else{
-      console.error(PerRes.reason);
+      console.error(PerRes.reason || '获取推荐失败');
     }
     console.log(PerRes);
   }catch(err){
