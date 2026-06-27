@@ -5,7 +5,7 @@ import { Camera } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import { getUserInfo, updateUserInfo, uploadUserImage } from '@/apis/user';
 import { banAdminUser, getAdminData } from '@/apis/admin';
-import { resolveAny } from 'dns';
+// import { resolveAny } from 'dns';
 import { getAdminUserTableData } from '../apis/admin';
 import axios from 'axios';
 

@@ -118,16 +118,18 @@ const handleLogOut = () => {
   100% { top: 100%; opacity: 0; }
 }
 
-a {
+/* 原本导航栏中关于我们（跳转向外部地址）的样式 */
+/* a {
   text-decoration: none;
   color: inherit;
-}
+} */
 
 /* 导航栏样式 */
 .nav-link {
   color: var(--lumina-primary);
   position: relative;
   transition: color 0.2s;
+  text-decoration: none;
 }
 .nav-link:hover {
   color: var(--lumina-accent);
