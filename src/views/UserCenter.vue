@@ -19,6 +19,10 @@ interface formDataInter {
   gender: 'male' | 'female' | null;
   avatar_url: string | null;
 }
+// 控制骨架屏加载效果的变量
+const loadingStats = ref(true);
+const loadingAdminTable = ref(true);
+
 // 个人中心表单数据
 const formData = reactive<formDataInter>({
   user_id: '',
@@ -74,6 +78,8 @@ const userListChange = async() => {
         message: err.message || '用户列表获取失败',
         type: 'info',
       })
+    }finally{
+      loadingAdminTable.value = false;
     }
 }
 const moutedAdminFunc = async () => {
@@ -101,6 +107,8 @@ const moutedAdminFunc = async () => {
         message: err.message || '网络异常',
         type: 'error',
       })
+    }finally{
+      loadingStats.value = false;
     }
    userListChange();
 }
@@ -304,8 +312,25 @@ const handleBanUser = async (row,column) => {
 
         <el-tab-pane label="管理员面板" name="admin" v-if="userInfoStore.userInfo?.role === 'admin'">
           <div class="admin-content flex flex-col mt-4 gap-6">
-            <!-- Stats Row -->
-            <div class="stats-grid">
+            <!-- 用户数据统计 -->
+             <el-skeleton
+             :loading="loadingStats"
+             animated
+             :throttle="{
+              leading: 500,
+              trailing: 500,
+              initVal: true,
+             }">
+             <template #template>
+              <div class="stats-grid">
+                <div v-for="i in 4" :key="i" class="stat-card flex flex-col items-center justify-center text-center">
+                  <el-skeleton-item variant="h1" style="width: 40%; margin-bottom: 1rem;"/>
+                  <el-skeleton-item variant="text" style="width: 60%; margin-bottom: 1rem;"/>
+                </div>
+              </div>
+             </template>
+             <template #default>
+              <div class="stats-grid">
               <div class="stat-card flex flex-col items-center justify-center text-center" >
                 <div class="text-xs font-semibold uppercase tracking-wider mb-2 stat-label">总用户数</div>
                 <div class="text-2xl font-bold font-serif stat-value">{{ adminStaticData.total_users }}</div>
@@ -323,6 +348,9 @@ const handleBanUser = async (row,column) => {
                 <div class="text-2xl font-bold font-serif stat-value">{{adminStaticData.total_clothes}}</div>
               </div>
             </div>
+             </template>
+            </el-skeleton>
+            
 
             <!-- Table Section -->
             <div class="table-container">
@@ -332,6 +360,21 @@ const handleBanUser = async (row,column) => {
                   共 {{ userList.length }} 名用户
                 </div>
               </div>
+               <el-skeleton
+             :loading="loadingAdminTable"
+             animated
+             :throttle="{
+              leading: 500,
+              trailing: 500,
+              initVal: true,
+             }">
+             <template #template>
+              <div style="padding:  14px 0;">
+                <el-skeleton-item variant="rect" style="width: 100%; height: 40px; margin-bottom: 10px;"/>
+                <el-skeleton-item variant="text" style="width: 100%; height: 30px; margin-bottom: 10px;"/>
+              </div>
+             </template>
+             <template #default>
               <el-table @cell-click="handleBanUser" :current-change="userListChange" max-height="500px" :stripe="true" :data="userList" class="custom-table w-full">
                 <el-table-column prop="user_id" label="ID" width="200" />
                 <el-table-column prop="nickname" label="昵称" width="130" />
@@ -358,11 +401,14 @@ const handleBanUser = async (row,column) => {
                   </template>
                 </el-table-column>
                 
-              </el-table>、
+              </el-table>
               <!-- 分页功能：待实现 -->
               <!-- <template>
                     <el-pagination background layout="prev, pager, next" :total="userList.length" />
                 </template> -->
+             </template>
+            </el-skeleton>
+              
             </div>
           </div>
         </el-tab-pane>
